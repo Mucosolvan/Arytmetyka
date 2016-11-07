@@ -1,43 +1,48 @@
-(************************************************)
-(* Zadanie o arytmetyce niedokładnych wartości. *)
-(************************************************)
+(*********************************************************)
+(* Arithmetics of inaccurate values.                     *)
+(* In this code [a,b] means closed interval from a to b. *)
+(*********************************************************)
 
-(* Typ reprezentujący niedokładne wartości. *)
-type wartosc 
+(* Type representing inaccurate values. *)
+type wartosc
 
-(* Implicite zakładamy, że wszystkie argumenty typu float są liczbami *)
-(* rzeczywistymi, tzn. są różne od infinity, neg_infinity i nan.      *)
-
-
-(* wartosc_dokladnosc x p = x +/- p% *)
-(* war.pocz.: p > 0                  *)
+(* wartosc_dokladnosc x p = [x - p/100 * x, x + p/100 * x] 
+   initial condition : p > 0  *)
 val wartosc_dokladnosc: float -> float -> wartosc    
 
-val create: float -> float -> bool -> wartosc
-(* wartosc_od_do x y = [x;y]         *)
-(* war.pocz.: x <= y                 *)
+val stworz: float -> float -> bool -> wartosc
+(* wartosc_od_do x y = [x;y]
+   initial condition : x <= y  *)
 val wartosc_od_do: float -> float -> wartosc                            
 
-(* wartosc_dokladna x = [x;x]        *)
+(* wartosc_dokladna x = [x;x]  *)
 val wartosc_dokladna: float -> wartosc   
 
-(* in_wartosc w x = x \in w *)
+(* in_wartosc w x = x in w *)
 val in_wartosc: wartosc -> float -> bool 
 
-(* min_wartosc w = najmniejsza możliwa wartość w,   *)
-(* lub neg_infinity jeśli brak dolnego ograniczenia.*)
+(* min_wartosc w = minimum value in w          
+   or neg_infinity if there is no infimum *)
 val min_wartosc: wartosc -> float       
 
-(* max_wartosc w = największa możliwa wartość w,    *)
-(* lub infinity jeśli brak górnego ograniczenia.    *)
+(* max_wartosc w = maximum value in w
+   or infinity is there is no supremum *)
 val max_wartosc: wartosc -> float       
 
-(* środek przedziału od min_wartosc do max_wartosc, *)
-(* lub nan jeśli min i max_wartosc nie są określone.*)
+(* Centre of [min_wartosc, max_wartosc]
+   or nan if at least one of min_wartosc, max_wartosc is not defined *)
 val sr_wartosc:  wartosc -> float       
     
-(* Operacje arytmetyczne na niedokładnych wartościach. *)
+(* Arithmetic operations on inaccurate values.          *)
+
+(* Plus x y = {a + b: in_wartosc a x && in_wartosc b y} *)
 val plus:      wartosc -> wartosc -> wartosc  
+
+(* Minus x y = {a - b: in_wartosc a x && in_wartosc b y} *)
 val minus:     wartosc -> wartosc -> wartosc 
+
+(* Razy x y = {a * b: in_wartosc a x && in_wartosc b y} *)
 val razy:      wartosc -> wartosc -> wartosc  
+
+(* Podzielic x y = {a / b: in_wartosc a x && in_wartosc b y} *)
 val podzielic: wartosc -> wartosc -> wartosc                         
